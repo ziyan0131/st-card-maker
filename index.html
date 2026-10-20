@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SillyTavern 角色卡制作工具</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.1.0/fonts/remixicon.css">
+</head>
+<body>
+    <!-- Toast Container -->
+    <div id="toast-container"></div>
+
+    <!-- Main App Layout -->
+    <div class="app-layout">
+        <!-- Left Panel: Editor -->
+        <aside class="editor-panel" id="editorPanel">
+            <div class="editor-header">
+                <h1 class="editor-title">
+                    <i class="ri-magic-line"></i>
+                    角色卡工坊
+                </h1>
+                <p class="editor-subtitle">SillyTavern Character Card Maker</p>
+            </div>
+
+            <div class="editor-body" id="editorBody">
+                <!-- Collapse All Toggle -->
+                <div class="collapse-all-bar">
+                    <button class="collapse-all-btn" id="collapseAllBtn" title="折叠/展开全部">
+                        <i class="ri-contract-up-down-line"></i>
+                        <span>全部折叠</span>
+                    </button>
+                </div>
+                <!-- Theme Selector Section -->
+                <section class="editor-section" data-section="theme">
+                    <div class="section-header" data-toggle="theme">
+                        <div class="section-title-group">
+                            <i class="ri-palette-line section-icon"></i>
+                            <span class="section-title">主题风格</span>
+                        </div>
+                        <i class="ri-arrow-down-s-line section-chevron"></i>
+                    </div>
+                    <div class="section-content expanded" id="sectionTheme">
+                        <div class="theme-grid" id="themeGrid">
+                            <!-- Theme cards injected by JS -->
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Basic Info Section -->
+                <section class="editor-section" data-section="basic">
+                    <div class="section-header" data-toggle="basic">
+                        <div class="section-title-group">
+                            <i class="ri-user-line section-icon"></i>
+                            <span class="section-title">基本信息</span>
+                        </div>
+                        <i class="ri-arrow-down-s-line section-chevron"></i>
+                    </div>
+                    <div class="section-content expanded" id="sectionBasic">
+                        <!-- Avatar Upload -->
+                        <div class="form-group">
+                            <label class="form-label">角色头像</label>
+                            <div class="avatar-upload" id="avatarUpload">
+                                <div class="avatar-preview" id="avatarPreview">
+                                    <i class="ri-camera-line avatar-placeholder-icon"></i>
+                                    <span class="avatar-placeholder-text">点击上传</span>
+                                </div>
+                                <input type="file" id="avatarInput" accept="image/*" hidden>
+                                <button class="avatar-remove-btn" id="avatarRemoveBtn" title="移除头像" style="display:none">
+                                    <i class="ri-close-line"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="charName">角色名称 <span class="required">*</span></label>
+                            <input type="text" class="form-input" id="charName" placeholder="输入角色名称" data-field="name">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="charTitle">角色头衔</label>
+                                <input type="text" class="form-input" id="charTitle" placeholder="如：暗夜精灵射手" data-field="title">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="charVersion">版本号</label>
+                                <input type="text" class="form-input" id="charVersion" placeholder="如：1.0" data-field="version">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="charCreator">创作者</label>
+                            <input type="text" class="form-input" id="charCreator" placeholder="你的名字或昵称" data-field="creator">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">角色标签</label>
+                            <div class="tag-input-wrapper" id="tagInputWrapper">
+                                <div class="tag-list" id="tagList"></div>
+                                <input type="text" class="tag-input" id="tagInput" placeholder="输入后按回车添加">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Personality Section -->
+                <section class="editor-section" data-section="personality">
+                    <div class="section-header" data-toggle="personality">
+                        <div class="section-title-group">
+                            <i class="ri-heart-line section-icon"></i>
+                            <span class="section-title">性格设定</span>
+                        </div>
+                        <i class="ri-arrow-down-s-line section-chevron"></i>
+                    </div>
+                    <div class="section-content" id="sectionPersonality">
+                        <div class="form-group">
+                            <label class="form-label" for="charPersonality">性格概述</label>
+                            <textarea class="form-textarea" id="charPersonality" rows="3" placeholder="角色的性格特征描述" data-field="personality"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="charDescription">角色描述</label>
+                            <textarea class="form-textarea auto-grow" id="charDescription" rows="5" placeholder="详细描述角色的外貌、背景故事、行为习惯等" data-field="description"></textarea>
+
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Dialogue Section -->
+                <section class="editor-section" data-section="dialogue">
+                    <div class="section-header" data-toggle="dialogue">
+                        <div class="section-title-group">
+                            <i class="ri-chat-3-line section-icon"></i>
+                            <span class="section-title">对话设定</span>
+                        </div>
+                        <i class="ri-arrow-down-s-line section-chevron"></i>
+                    </div>
+                    <div class="section-content" id="sectionDialogue">
+                        <div class="form-group">
+                            <label class="form-label" for="charFirstMessage">开场白</label>
+                            <textarea class="form-textarea auto-grow" id="charFirstMessage" rows="4" placeholder="角色的第一条消息" data-field="first_mes"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="charMesExample">对话示例</label>
+                            <textarea class="form-textarea auto-grow" id="charMesExample" rows="4" placeholder="<START>\n{{user}}: 你好\n{{char}}: 你好呀！" data-field="mes_example"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="charScenario">场景描述</label>
+                            <textarea class="form-textarea" id="charScenario" rows="3" placeholder="对话发生的场景" data-field="scenario"></textarea>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- System Prompt Section -->
+                <section class="editor-section" data-section="system">
+                    <div class="section-header" data-toggle="system">
+                        <div class="section-title-group">
+                            <i class="ri-settings-3-line section-icon"></i>
+                            <span class="section-title">系统设定</span>
+                        </div>
+                        <i class="ri-arrow-down-s-line section-chevron"></i>
+                    </div>
+                    <div class="section-content" id="sectionSystem">
+                        <div class="form-group">
+                            <label class="form-label" for="charSystemPrompt">系统提示词</label>
+                            <textarea class="form-textarea auto-grow" id="charSystemPrompt" rows="4" placeholder="系统级的提示词" data-field="system_prompt"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="charPostHistoryInstructions">后置历史指令</label>
+                            <textarea class="form-textarea" id="charPostHistoryInstructions" rows="3" placeholder="在聊天历史之后注入的指令" data-field="post_history_instructions"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="charCreatorNotes">创作备注</label>
+                            <textarea class="form-textarea" id="charCreatorNotes" rows="3" placeholder="给使用者看的备注" data-field="creator_notes"></textarea>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Bottom Action Bar -->
+            <div class="editor-actions">
+                <button class="btn btn-secondary" id="btnImport" title="导入">
+                    <i class="ri-upload-2-line"></i>
+                    <span>导入</span>
+                </button>
+                <button class="btn btn-secondary" id="btnReset" title="重置">
+                    <i class="ri-refresh-line"></i>
+                    <span>重置</span>
+                </button>
+                <div class="action-spacer"></div>
+                <button class="btn btn-primary" id="btnExportPNG" title="导出PNG卡">
+                    <i class="ri-image-line"></i>
+                    <span>导出PNG</span>
+                </button>
+                <button class="btn btn-accent" id="btnExportJSON" title="导出JSON">
+                    <i class="ri-code-s-slash-line"></i>
+                    <span>JSON</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Right Panel: Live Preview -->
+        <main class="preview-panel" id="previewPanel">
+            <div class="preview-toolbar">
+                <div class="preview-toolbar-left">
+                    <span class="preview-badge"><i class="ri-eye-line"></i> 实时预览</span>
+                </div>
+                <div class="preview-toolbar-right">
+                    <button class="toolbar-btn" id="btnCopyImage" title="复制为图片">
+                        <i class="ri-file-copy-line"></i>
+                    </button>
+                    <button class="toolbar-btn" id="btnToggleEditor" title="切换编辑器">
+                        <i class="ri-side-bar-line"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="preview-scroll">
+                <div class="card-container" id="cardContainer">
+                    <!-- Card rendered here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile FAB -->
+    <button class="mobile-fab" id="mobileFab" title="切换面板">
+        <i class="ri-edit-line"></i>
+    </button>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="ri-upload-2-line"></i> 导入角色卡</h3>
+                <button class="modal-close" id="importModalClose"><i class="ri-close-line"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="drop-zone" id="dropZone">
+                    <i class="ri-drag-drop-line drop-icon"></i>
+                    <p class="drop-text">拖拽文件到这里，或点击选择</p>
+                    <p class="drop-hint">支持 JSON / PNG 角色卡文件</p>
+                    <input type="file" id="importFileInput" accept=".json,.png" hidden>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirm Modal -->
+    <div class="modal-overlay" id="resetModal">
+        <div class="modal-content modal-sm">
+            <div class="modal-header">
+                <h3><i class="ri-alert-line"></i> 确认重置</h3>
+            </div>
+            <div class="modal-body">
+                <p>确定要清空所有已填写的内容吗？此操作不可撤销。</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" id="resetCancel">取消</button>
+                <button class="btn btn-danger" id="resetConfirm">确认重置</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/themeManager.js"></script>
+    <script src="js/formManager.js"></script>
+    <script src="js/cardRenderer.js"></script>
+    <script src="js/exportHandler.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
