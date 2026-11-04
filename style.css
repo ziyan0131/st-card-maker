@@ -1,0 +1,96 @@
+/* 制卡工具 v4.0 - 弹窗外壳样式（手机全屏修复版）*/
+
+#cm-window {
+  position: fixed;
+  z-index: 10001;
+  display: flex;
+  pointer-events: none;
+  inset: 0;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+#cm-window .cm-container {
+  pointer-events: auto;
+  position: fixed;
+  right: 10px; top: 40px;
+  width: 420px; height: 80vh;
+  max-width: calc(100vw - 16px);
+  max-height: calc(100vh - 50px);
+  min-width: 300px; min-height: 250px;
+  background: #fff;
+  border: 1px solid #e8c0d0;
+  border-radius: 12px;
+  display: flex; flex-direction: column;
+  box-shadow: 0 6px 30px rgba(180,80,120,0.12);
+  overflow: hidden;
+}
+.cm-container.cm-fullscreen {
+  width: 100vw!important; height: 100vh!important;
+  max-width: 100vw!important; max-height: 100vh!important;
+  border-radius: 0!important;
+  left: 0!important; top: 0!important;
+  right: auto!important; bottom: auto!important;
+  position: fixed!important; margin: 0!important; transform: none!important;
+}
+
+.cm-header {
+  background: linear-gradient(135deg, #fce4ec, #f8f0f4);
+  border-bottom: 1px solid #f0c0d0;
+  padding: 7px 12px;
+  display: flex; align-items: center; justify-content: space-between;
+  cursor: move; user-select: none; -webkit-user-select: none;
+  flex-shrink: 0;
+  color: #8a4060;
+  font-size: 13px; font-weight: 600;
+  min-height: 44px;
+}
+.cm-header-title { display:flex; align-items:center; gap:5px; }
+.cm-header-title svg { color: #c06080; }
+.cm-header-actions { display: flex; gap: 4px; }
+.cm-hdr-btn {
+  background: rgba(255,255,255,0.6); border: 1px solid #f0c0d0;
+  color: #a06080; font-size: 14px; cursor: pointer;
+  width: 32px; height: 32px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 6px; transition: all .15s; line-height: 1;
+  touch-action: manipulation;
+}
+.cm-hdr-btn:hover { background: #fff; color: #c06080; border-color: #d090a0; }
+.cm-close-btn:hover { background: #e74c3c; color: #fff; border-color: #e74c3c; }
+
+#cm-iframe { flex: 1; width: 100%; border: none; background: #fff; }
+
+.cm-resize { position: absolute; z-index: 10; }
+.cm-r-n { top:-4px; left:12px; right:12px; height:8px; cursor:n-resize; }
+.cm-r-s { bottom:-4px; left:12px; right:12px; height:8px; cursor:s-resize; }
+.cm-r-e { top:12px; right:-4px; bottom:12px; width:8px; cursor:e-resize; }
+.cm-r-w { top:12px; left:-4px; bottom:12px; width:8px; cursor:w-resize; }
+.cm-r-ne { top:-4px; right:-4px; width:14px; height:14px; cursor:ne-resize; }
+.cm-r-nw { top:-4px; left:-4px; width:14px; height:14px; cursor:nw-resize; }
+.cm-r-se { bottom:-4px; right:-4px; width:14px; height:14px; cursor:se-resize; }
+.cm-r-sw { bottom:-4px; left:-4px; width:14px; height:14px; cursor:sw-resize; }
+.cm-fullscreen .cm-resize { display: none; }
+
+.cm-ext-settings svg { vertical-align: middle; margin-right: 4px; color: #c06080; }
+#cm_wand_btn { cursor: pointer; }
+#cm_wand_btn svg { vertical-align: middle; margin-right: 2px; color: #c06080; }
+#cm_wand_btn:hover { color: #c06080; }
+
+/* ===== 手机端：自动全屏 ===== */
+@media (max-width: 768px) {
+  #cm-window .cm-container {
+    width: 100vw !important;
+    height: 100vh !important;
+    max-width: 100vw !important;
+    max-height: 100vh !important;
+    right: 0 !important;
+    left: 0 !important;
+    top: 0 !important;
+    bottom: 0 !important;
+    border-radius: 0 !important;
+    margin: 0 !important;
+    transform: none !important;
+  }
+  .cm-resize { display: none !important; }
+  .cm-hdr-btn { width: 40px; height: 40px; font-size: 16px; }
+}
